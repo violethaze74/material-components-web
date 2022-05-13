@@ -674,15 +674,18 @@
   }
 }
 
-@mixin max-width($max-width, $margin, $query: feature-targeting.all()) {
+@mixin max-width-with-breakpoint(
+  $max-width,
+  $margin,
+  $max-width-breakpoint,
+  $query: feature-targeting.all()
+) {
   $feat-structure: feature-targeting.create-target($query, structure);
   $max-size-calc-expr: calc(100vw - #{$margin * 2});
 
   .mdc-dialog__surface {
     @include feature-targeting.targets($feat-structure) {
       @if $max-width {
-        $max-width-breakpoint: $max-width + ($margin * 2);
-
         // Fit snugly within the viewport at smaller screen sizes.
         @media (max-width: $max-width-breakpoint) {
           max-width: $max-size-calc-expr;
@@ -697,6 +700,16 @@
       }
     }
   }
+}
+
+@mixin max-width($max-width, $margin, $query: feature-targeting.all()) {
+  $max-width-breakpoint: $max-width + ($margin * 2);
+  @include max-width-with-breakpoint(
+    $max-width,
+    $margin,
+    $max-width-breakpoint,
+    $query
+  );
 }
 
 @mixin max-height($max-height, $margin, $query: feature-targeting.all()) {
